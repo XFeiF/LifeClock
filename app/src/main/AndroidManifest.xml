@@ -10,6 +10,14 @@
         android:persistent="true"
         android:theme="@style/AppTheme">
 
+        <activity android:name=".MainActivity"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <receiver android:name=".TimeTaken">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -23,9 +31,8 @@
 
         <activity android:name=".TimeTakenConfigureActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
