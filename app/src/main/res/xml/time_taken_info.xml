@@ -4,9 +4,9 @@
     android:initialKeyguardLayout="@layout/time_taken"
     android:initialLayout="@layout/time_taken"
     android:minHeight="40dp"
-    android:minWidth="160dp"
-    android:previewImage="@drawable/example_appwidget_preview"
+    android:minWidth="250dp"
+    android:previewImage="@drawable/preview"
     android:resizeMode="horizontal|vertical"
-    android:updatePeriodMillis="1"
+    android:updatePeriodMillis="80"
     android:widgetCategory="home_screen|keyguard">
 </appwidget-provider>

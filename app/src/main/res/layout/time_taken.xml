@@ -5,17 +5,17 @@
     android:padding="@dimen/widget_margin">
 
     <TextView
-        android:gravity="center"
         android:id="@+id/appwidget_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_margin="8dp"
         android:contentDescription="@string/appwidget_text"
+        android:gravity="center"
         android:text="@string/appwidget_text"
         android:textColor="#ffffff"
-        android:textSize="24sp"
-        android:textStyle="bold|italic" />
+        android:textSize="32sp"
+        android:typeface="monospace" />
 
 </RelativeLayout>

@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">TimeTaken</string>
+    <string name="app_name">生命时钟</string>
     <string name="appwidget_text">生命时钟</string>
     <string name="configure">Configure</string>
     <string name="add_widget">Add widget</string>
+    <string name="btn_save">保存</string>
+    <string name="go_to_add">已保存，去添加Widget吧 ^_^ </string>
 </resources>
