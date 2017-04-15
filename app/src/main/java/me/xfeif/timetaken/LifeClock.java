@@ -1,7 +1,5 @@
 package me.xfeif.timetaken;
 
-import android.util.Log;
-
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,14 +13,13 @@ public class LifeClock {
 
     private static String TEMPLATE = "yyyy-MM-dd";
     private static SimpleDateFormat sdf = new SimpleDateFormat(TEMPLATE, Locale.CHINA);
-    private static String str_myBirthday = "1996-03-04";
 
 
     private long getBirthdayInMilliseconds(String birthday){
         Date myBirthday = null;
         try {
             myBirthday = sdf.parse(birthday);
-            Log.d(TEMPLATE, myBirthday.toString());
+            //Log.d(TEMPLATE, myBirthday.toString());
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -63,14 +60,14 @@ public class LifeClock {
     }
 
 
-    public long getElapsedTimeInMilliseconds(){
-        return m_time.now() - getBirthdayInMilliseconds(str_myBirthday);
+    public long getElapsedTimeInMilliseconds(String birthday){
+        return m_time.now() - getBirthdayInMilliseconds(birthday);
     }
 
-    public String getElapsedTimeInYear(){
+    public String getElapsedTimeInYear(String birthday){
         DecimalFormat df = new DecimalFormat( "0.0000000000");
 
-        return df.format(getElapsedTimeInMilliseconds()*1.0/1000/60/60/24/365);
+        return df.format(getElapsedTimeInMilliseconds(birthday)*1.0/1000/60/60/24/365);
     }
 
 }

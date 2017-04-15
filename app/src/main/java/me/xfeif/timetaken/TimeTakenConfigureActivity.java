@@ -7,25 +7,33 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.RemoteViews;
+
+import static me.xfeif.timetaken.MainActivity.BIRTHDAY_DAY;
+import static me.xfeif.timetaken.MainActivity.BIRTHDAY_MONTH;
+import static me.xfeif.timetaken.MainActivity.BIRTHDAY_YEAR;
+import static me.xfeif.timetaken.MainActivity.DATE_PREFERENCE;
 
 /**
  * The configuration screen for the {@link TimeTaken TimeTaken} AppWidget.
  */
 public class TimeTakenConfigureActivity extends Activity {
 
-    private static final String PREFS_NAME = "me.xfeif.timetaken.TimeTaken";
-    private static final String PREF_PREFIX_KEY = "appwidget_";
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
-    EditText mAppWidgetText;
+
+    private DatePicker birthdayPicker;
+    private int year, month, day;
+    private Button saveBtn;
+
     View.OnClickListener mOnClickListener = new View.OnClickListener() {
         public void onClick(View v) {
             final Context context = TimeTakenConfigureActivity.this;
 
-            // When the button is clicked, store the string locally
-            String widgetText = mAppWidgetText.getText().toString();
-            saveTitlePref(context, mAppWidgetId, widgetText);
+            // When the button is clicked, store your birthday locally
+            getBirthday();
+            saveBirthday(context);
 
             // It is the responsibility of the configuration activity to update the app widget
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
@@ -44,31 +52,6 @@ public class TimeTakenConfigureActivity extends Activity {
         super();
     }
 
-    // Write the prefix to the SharedPreferences object for this widget
-    static void saveTitlePref(Context context, int appWidgetId, String text) {
-        SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
-        prefs.putString(PREF_PREFIX_KEY + appWidgetId, text);
-        prefs.apply();
-    }
-
-    // Read the prefix from the SharedPreferences object for this widget.
-    // If there is no preference saved, get the default from a resource
-    static String loadTitlePref(Context context, int appWidgetId) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        String titleValue = prefs.getString(PREF_PREFIX_KEY + appWidgetId, null);
-        if (titleValue != null) {
-            return titleValue;
-        } else {
-            return context.getString(R.string.appwidget_text);
-        }
-    }
-
-    static void deleteTitlePref(Context context, int appWidgetId) {
-        SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
-        prefs.remove(PREF_PREFIX_KEY + appWidgetId);
-        prefs.apply();
-    }
-
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -78,8 +61,9 @@ public class TimeTakenConfigureActivity extends Activity {
         setResult(RESULT_CANCELED);
 
         setContentView(R.layout.time_taken_configure);
-        mAppWidgetText = (EditText) findViewById(R.id.appwidget_text);
-        findViewById(R.id.add_button).setOnClickListener(mOnClickListener);
+        birthdayPicker = (DatePicker) findViewById(R.id.birthdayPicker);
+        saveBtn = (Button) findViewById(R.id.saveButton);
+        saveBtn.setOnClickListener(mOnClickListener);
 
         // Find the widget id from the intent.
         Intent intent = getIntent();
@@ -95,7 +79,32 @@ public class TimeTakenConfigureActivity extends Activity {
             return;
         }
 
-        mAppWidgetText.setText(loadTitlePref(TimeTakenConfigureActivity.this, mAppWidgetId));
+        loadBirthdayPref(TimeTakenConfigureActivity.this);
+    }
+
+    private void getBirthday(){
+        year = birthdayPicker.getYear();
+        month = birthdayPicker.getMonth() + 1;
+        day = birthdayPicker.getDayOfMonth();
+    }
+
+    private void saveBirthday(Context context){
+        getBirthday();
+        SharedPreferences.Editor editor = context.getSharedPreferences(DATE_PREFERENCE,
+                                                Activity.MODE_PRIVATE).edit();
+        editor.putInt(BIRTHDAY_YEAR, year);
+        editor.putInt(BIRTHDAY_MONTH, month);
+        editor.putInt(BIRTHDAY_DAY, day);
+        editor.apply();
+    }
+
+    private void loadBirthdayPref(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(DATE_PREFERENCE, Activity.MODE_PRIVATE);
+        year = sharedPreferences.getInt(BIRTHDAY_YEAR,-1);
+        month = sharedPreferences.getInt(BIRTHDAY_MONTH, -1) - 1;
+        day = sharedPreferences.getInt(BIRTHDAY_DAY, -1);
+        if (year > 0 && month > 0 && day > 0 )
+            birthdayPicker.updateDate(year,month,day);
     }
 }
 

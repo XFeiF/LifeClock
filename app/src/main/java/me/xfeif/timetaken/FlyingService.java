@@ -1,5 +1,6 @@
 package me.xfeif.timetaken;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -7,6 +8,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -19,7 +21,7 @@ import android.widget.RemoteViews;
  */
 public class FlyingService extends Service{
     private static final int ALARM_DURATION = 2*60*1000;
-    private static final int UPDATE_DURATION = 1;
+    private static final int UPDATE_DURATION = 80;
     private static final int UPDATE_MESSAGE = 1000;
     private static final LifeClock mClock = new LifeClock();
 
@@ -63,8 +65,13 @@ public class FlyingService extends Service{
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.time_taken);
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
-        mElapsedTime = mClock.getElapsedTimeInYear();
+        mElapsedTime = mClock.getElapsedTimeInYear(getBirthday());
         remoteViews.setTextViewText(R.id.appwidget_text, mElapsedTime);
+
+        // Set on appwidget click event
+        Intent intent = new Intent(context, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0 ,intent, 0);
+        remoteViews.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent);
 
         appWidgetManager.updateAppWidget(new ComponentName(context, TimeTaken.class), remoteViews);
 
@@ -84,5 +91,16 @@ public class FlyingService extends Service{
                 default:break;
             }
         }
+    }
+
+    private String getBirthday(){
+        String birthday="";
+
+        SharedPreferences sharedPreferences = getSharedPreferences(MainActivity.DATE_PREFERENCE, Activity.MODE_PRIVATE);
+        birthday = birthday + sharedPreferences.getInt(MainActivity.BIRTHDAY_YEAR,1996);
+        birthday = birthday + "-" + sharedPreferences.getInt(MainActivity.BIRTHDAY_MONTH, 3);
+        birthday = birthday + "-" + sharedPreferences.getInt(MainActivity.BIRTHDAY_DAY, 4);
+
+        return birthday;
     }
 }
